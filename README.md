@@ -7,3 +7,7 @@
 3. Reduced Workload: By automating responses to Frequently Asked Questions (FAQs), the chatbot will reduce the workload on department staff, enabling them to focus on more complex tasks.
 
 4. Data Insights: The chatbot will collect data from user interactions, providing valuable insights to help the department identify common concerns and improve services accordingly.
+## Frontend
+We will be using vanilla HTML/CSS for this project and some JS if we would like to add some cool animations.
+## Backend
+We will be using Flask in Python
