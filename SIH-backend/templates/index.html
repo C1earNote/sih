@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot for College Admissions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+        }
+        #chatbox {
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        #messages {
+            border: 1px solid #ddd;
+            padding: 20px;
+            height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        #input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        #send {
+            padding: 10px 20px;
+        }
+    </style>
+    <!-- Include Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="chatbox">
+        <div id="messages"></div>
+        <input type="text" id="input" placeholder="Ask a question about college admissions...">
+        <button id="send">Send</button>
+    </div>
+
+    <script>
+        document.getElementById('send').onclick = function() {
+            const input = document.getElementById('input').value;
+            if (input.trim() === '') return;
+
+            const messages = document.getElementById('messages');
+            const userMessage = document.createElement('div');
+            userMessage.textContent = 'You: ' + input;
+            messages.appendChild(userMessage);
+
+            // Use Axios to make a POST request
+            axios.post('/chat', {
+                question: input
+            })
+            .then(response => {
+                const botMessage = document.createElement('div');
+                botMessage.textContent = 'Bot: ' + response.data.answer;
+                messages.appendChild(botMessage);
+            })
+            .catch(error => {
+                console.error('There was an error!', error);
+                const errorMessage = document.createElement('div');
+                errorMessage.textContent = 'Error: Unable to get a response.';
+                messages.appendChild(errorMessage);
+            });
+
+            document.getElementById('input').value = '';
+        };
+    </script>
+</body>
+</html>
