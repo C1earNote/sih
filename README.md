@@ -11,3 +11,4 @@
 We will be using vanilla HTML/CSS for this project and some JS if we would like to add some cool animations.
 ## Backend
 We will be using Flask in Python
+## Project Flow
