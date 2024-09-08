@@ -6,21 +6,19 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet" />
     <style>
-       body {
-    font-family: 'Roboto', sans-serif;
-    background-image: url('pages/background.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed; /* Keeps the background fixed while scrolling */
-}
-
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-image: url('pages/background.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            /* Keeps the background fixed while scrolling */
+        }
     </style>
-</head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chatbot for College Admissions</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
         /* General reset */
         * {
@@ -36,7 +34,8 @@
             background: #F1F1F1;
         }
 
-        *, html {
+        *,
+        html {
             --primaryGradient: linear-gradient(93.12deg, #581B98 0.52%, #9C1DE7 100%);
             --secondaryGradient: linear-gradient(268.91deg, #581B98 -2.14%, #9C1DE7 99.69%);
             --primaryBoxShadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
@@ -48,22 +47,26 @@
         .chatbox {
             position: fixed;
             bottom: 30px;
-            right: 30px;
-            width: 90%;
-            max-width: 500px;
-            height: 600px;
+            right: 20px;
+            width: 40%;
+            max-width: 400px;
+            height: 500px;
+            /* Shortened height */
             z-index: 1000;
         }
 
         .chatbox__support {
-            display: none; /* Initially hidden */
+            display: none;
+            /* Initially hidden */
             flex-direction: column;
-            background: #fff;
             width: 100%;
             height: 100%;
             transition: all 0.3s ease-in-out;
             border-radius: 20px;
-            box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+            background-image: url('SIH-backend/templates/hi.jpeg');
+            background-size: cover;
+            background-position: center;
         }
 
         .chatbox--active .chatbox__support {
@@ -71,15 +74,26 @@
         }
 
         .chatbox__button {
-            text-align: right;
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
             cursor: pointer;
+            z-index: 1001;
         }
 
         .chatbox__button img {
-            width: 60px;
-            height: 60px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             box-shadow: var(--primaryBoxShadow);
+        }
+
+        .send__button {
+            padding: 6px;
+            background-color: black;
+            border: none;
+            outline: none;
+            cursor: pointer;
         }
 
         .chatbox__header {
@@ -87,78 +101,82 @@
             top: 0;
             background: var(--primaryGradient);
             display: flex;
+            flex-direction: row;
             align-items: center;
-            padding: 15px;
+            justify-content: center;
+            padding: 15px 20px;
             border-top-left-radius: 20px;
             border-top-right-radius: 20px;
             box-shadow: var(--primaryBoxShadow);
         }
 
         .chatbox__image--header {
-            margin-right: 15px;
+            margin-right: 10px;
         }
 
         .chatbox__heading--header {
-            font-size: 1.4rem;
-            color: #fff;
+            font-size: 1.2rem;
+            color: white;
         }
 
         .chatbox__description--header {
-            font-size: 1rem;
-            color: #f0f0f0;
+            font-size: .9rem;
+            color: white;
         }
 
         .chatbox__messages {
-            padding: 10px 20px;
+            padding: 0 20px;
             margin-top: auto;
             display: flex;
+            overflow-y: scroll;
             flex-direction: column;
-            height: 75%;
-            overflow-y: auto;
+            height: 70%;
             background-color: #fafafa;
             border: 1px solid #ddd;
             border-radius: 20px;
         }
 
         .messages__item {
-            margin: 10px 0;
-            padding: 12px 16px;
-            border-radius: 20px;
-            max-width: 75%;
-            line-height: 1.5;
-            font-size: 0.9rem;
+            margin-top: 10px;
+            padding: 8px 12px;
+            max-width: 70%;
+            border-radius: 10px;
         }
 
         .messages__item--visitor {
-            background: #e0e0e0;
+            background: #E0E0E0;
+            /* Visitor (user) message color */
             align-self: flex-start;
+            color: #333;
         }
 
         .messages__item--operator {
             background: var(--primary);
-            color: #fff;
+            /* Operator (bot) message color */
+            color: white;
+            margin-left: auto;
             align-self: flex-end;
         }
 
         .chatbox__footer {
             display: flex;
+            flex-direction: row;
             align-items: center;
             justify-content: space-between;
-            padding: 10px 20px;
+            padding: 15px 20px;
             background: var(--secondaryGradient);
             box-shadow: var(--secondaryBoxShadow);
-            border-bottom-right-radius: 20px;
-            border-bottom-left-radius: 20px;
-            margin-top: 20px;
+            border-bottom-right-radius: 10px;
+            border-bottom-left-radius: 10px;
+            height: 15%;
         }
 
         .chatbox__footer input {
             width: 80%;
             border: none;
-            padding: 10px;
+            padding: 10px 10px;
             border-radius: 30px;
-            font-size: 0.9rem;
-            outline: none;
+            text-align: left;
         }
 
         .chatbox__send--footer {
@@ -171,21 +189,24 @@
         .chatbox__send--footer img {
             width: 24px;
             height: 24px;
+            vertical-align: middle;
         }
 
-        .chatbox__button button {
-            padding: 12px;
-            background: #fff;
+        .chatbox__button button,
+        .chatbox__button button:focus,
+        .chatbox__button button:visited {
+            padding: 10px;
+            background: white;
             border: none;
-            border-radius: 50px;
-            box-shadow: var(--primaryBoxShadow);
+            outline: none;
+            border-top-left-radius: 50px;
+            border-top-right-radius: 50px;
+            border-bottom-left-radius: 50px;
+            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
             cursor: pointer;
         }
 
-        .chatbox__button button:hover {
-            background-color: #f5f5f5;
-        }
-
+        /* Style for voice button */
         #voice {
             background-color: transparent;
             border: none;
@@ -204,13 +225,14 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
-<body>
 
+<body class="bg-gray-100" class="flex flex-col items-center justify-center min-h-screen" class="bg-white" class="p-8">
     <div class="chatbox">
         <div class="chatbox__support">
             <div class="chatbox__header">
                 <div class="chatbox__image--header">
-                    <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-5--v1.png" alt="Support Avatar">
+                    <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-5--v1.png"
+                        alt="Support Avatar">
                 </div>
                 <div class="chatbox__content--header">
                     <h4 class="chatbox__heading--header">Chat Support</h4>
@@ -227,18 +249,18 @@
                     <img src="https://img.icons8.com/ios-filled/24/ffffff/right.png" alt="Send">
                 </button>
             </div>
+
         </div>
         <div class="chatbox__button">
-            <button>
-                <img src="https://img.icons8.com/ios-filled/50/000000/chat.png" />
-            </button>
+            <img src="https://img.icons8.com/ios-filled/50/000000/chat.png" />
         </div>
     </div>
 
     <script>
         // Toggle chatbox visibility
         document.querySelector('.chatbox__button').onclick = function () {
-            document.querySelector('.chatbox').classList.toggle('chatbox--active');
+            const chatbox = document.querySelector('.chatbox');
+            chatbox.classList.toggle('chatbox--active');
         };
 
         // Speech recognition setup
@@ -308,13 +330,13 @@
         });
     </script>
 
-<body class="bg-gray-100" class="flex flex-col items-center justify-center min-h-screen" class="bg-white" class="p-8">
     <header class="flex justify-between items-center p-4 bg-white shadow-md">
         <div class="flex items-center">
             <button class="text-2xl">
                 <i class="fas fa-bars">
                 </i>
             </button>
+
         </div>
         <div class="flex space-x-4">
             <button class="bg-yellow-200 px-4 py-2 rounded">
@@ -342,7 +364,7 @@
         </div>
         <div class="relative mr-[-10%] w-6/2 mt-8">
             <img alt="Illustration of a building with multiple arches and windows" src="pages/image-removebg.png"
-                 class="w-full h-auto shadow-2xl opacity-95 rounded-lg" />
+                class="w-full h-auto shadow-2xl opacity-95 rounded-lg" />
         </div>
         <div class="w-full max-w-6xl p-4">
             <div class="flex justify-between items-center mb-8">
