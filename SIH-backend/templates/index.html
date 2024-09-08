@@ -30,47 +30,44 @@
 
         /* Chatbox styles */
         .chatbox {
-    position: absolute;
-    bottom: 30px;
-    right: 30px;
-    width: 40%; /* Increased width to 40% */
-    height: 550px; /* Decreased height to 550px */
-}
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 40%;
+            height: 550px;
+        }
 
-        /* Closed chatbox state */
         .chatbox__support {
-    display: flex;
-    flex-direction: column;
-    background: #eee;
-    width: 100%; /* Changed to 100% to fill the parent container */
-    height: 100%; /* Changed to 100% to fill the parent container */
-    z-index: -123456;
-    opacity: 0;
-    transition: all .5s ease-in-out;
-    border-radius: 20px; /* Added border radius to give a rounded corner effect */
-    box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1); /* Added box shadow to give a depth effect */
-}
-        /* Open chatbox state */
-        .chatbox--active {
-    transform: translateY(-40px);
-    z-index: 14523456;
-    opacity: 1;
-}
+            display: flex;
+            flex-direction: column;
+            background: #eee;
+            width: 100%;
+            height: 100%;
+            z-index: -123456;
+            opacity: 0;
+            transition: all .5s ease-in-out;
+            border-radius: 20px;
+            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+        }
 
-        /* Chatbox button */
+        .chatbox--active {
+            transform: translateY(-40px);
+            z-index: 14523456;
+            opacity: 1;
+        }
+
         .chatbox__button {
             text-align: right;
         }
 
         .send__button {
             padding: 6px;
-            background: transparent;
+            background-color: black;
             border: none;
             outline: none;
             cursor: pointer;
         }
 
-        /* Chatbox header */
         .chatbox__header {
             position: sticky;
             top: 0;
@@ -99,21 +96,17 @@
             color: white;
         }
 
-        /* Messages section */
         .chatbox__messages {
-    padding: 0 20px;
-    margin-top: auto;
-    display: flex;
-    overflow-y: scroll;
-    flex-direction: column; /* Change from column-reverse to column */
-    height: 80%; /* Increased height to 80% to fill the parent container */
-    background-color: #fafafa;
-    border: 1px solid #ddd;
-    border-radius: 20px; /* Added border radius to give a rounded corner effect */
-}
-
-
-
+            padding: 0 20px;
+            margin-top: auto;
+            display: flex;
+            overflow-y: scroll;
+            flex-direction: column;
+            height: 80%;
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+        }
 
         .messages__item {
             margin-top: 10px;
@@ -130,33 +123,35 @@
         }
 
         .messages__item--operator {
-    max-width: 80%; /* Increased max-width to 80% */
-    background: var(--primary);
-    color: white;
-    margin-left: auto;
-    padding: 12px 16px; /* Increased padding to make the text more readable */
-}
-        /* Footer section */
+            max-width: 80%;
+            background: var(--primary);
+            color: white;
+            margin-left: auto;
+            padding: 12px 16px;
+        }
+
         .chatbox__footer {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 20px;
-    background: var(--secondaryGradient);
-    box-shadow: var(--secondaryBoxShadow);
-    border-bottom-right-radius: 10px;
-    border-bottom-left-radius: 10px;
-    margin-top: 20px;
-    height: 10%; /* Increased height to 10% to fill the parent container */
-}
-.chatbox__close {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 24px;
-    cursor: pointer;
-}
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 20px;
+            background: var(--secondaryGradient);
+            box-shadow: var(--secondaryBoxShadow);
+            border-bottom-right-radius: 10px;
+            border-bottom-left-radius: 10px;
+            margin-top: 20px;
+            height: 10%;
+        }
+        
+        .chatbox__close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
         .chatbox__footer input {
             width: 80%;
             border: none;
@@ -166,8 +161,18 @@
         }
 
         .chatbox__send--footer {
-            color: white;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
         }
+
+        .chatbox__send--footer img {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+        }
+
 
         .chatbox__button button,
         .chatbox__button button:focus,
@@ -182,9 +187,24 @@
             box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
             cursor: pointer;
         }
+
+        /* Style for voice button */
+        #voice {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #voice img {
+            width: 24px;
+            height: 24px;
+        }
     </style>
     <!-- Include Axios CDN -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Include marked.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
 
@@ -202,8 +222,14 @@
         <div id="messages" class="chatbox__messages"></div>
         <div class="chatbox__footer">
             <input type="text" id="input" placeholder="Write a message...">
-            <button type="button" class="chatbox__send--footer" id="send">Send</button>
+            <button type="button" class="chatbox__send--footer" id="voice">
+                <img src="https://img.icons8.com/ios-filled/24/ffffff/microphone.png" alt="Voice Input">
+            </button>
+            <button type="button" class="chatbox__send--footer" id="send">
+                <img src="https://img.icons8.com/ios-filled/24/ffffff/right.png" alt="Send">
+            </button>
         </div>
+        
     </div>
     <div class="chatbox__button">
         <button><img src="{{ url_for('static', filename='images/chatbox-icon.svg') }}" /></button>
@@ -211,11 +237,31 @@
 </div>
 
 <script>
+    // Speech recognition setup
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+
+    // Voice button click handler
+    document.getElementById('voice').onclick = function() {
+        recognition.start();
+    };
+
+    // Handle speech recognition result
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('input').value = transcript; // Set the input field with the recognized text
+        document.getElementById('send').click(); // Automatically send the message after voice input
+    };
+
+    // Handle send button click
     document.getElementById('send').onclick = function() {
         const input = document.getElementById('input').value;
         if (input.trim() === '') return;
 
         const messages = document.getElementById('messages');
+        
+        // Add user message
         const userMessage = document.createElement('div');
         userMessage.textContent = 'You: ' + input;
         userMessage.classList.add('messages__item', 'messages__item--visitor');
@@ -230,7 +276,8 @@
         })
         .then(response => {
             const botMessage = document.createElement('div');
-            botMessage.textContent = 'Bot: ' + response.data.answer;
+            // Convert Markdown to HTML using marked
+            botMessage.innerHTML = marked.parse(response.data.answer);
             botMessage.classList.add('messages__item', 'messages__item--operator');
             messages.appendChild(botMessage);
 
@@ -247,7 +294,16 @@
 
         document.getElementById('input').value = '';
     };
+
+    // Handle Enter key press to send message
+    document.getElementById('input').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent the default form submission if applicable
+            document.getElementById('send').click(); // Trigger the send button click
+        }
+    });
 </script>
+
 
 </body>
 </html>
