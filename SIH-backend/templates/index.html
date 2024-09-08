@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot for College Admissions</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* General reset */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            font-weight: 400;
+            font-size: 100%;
+            background: #F1F1F1;
+        }
+
+        *, html {
+            --primaryGradient: linear-gradient(93.12deg, #581B98 0.52%, #9C1DE7 100%);
+            --secondaryGradient: linear-gradient(268.91deg, #581B98 -2.14%, #9C1DE7 99.69%);
+            --primaryBoxShadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+            --secondaryBoxShadow: 0px -10px 15px rgba(0, 0, 0, 0.1);
+            --primary: #581B98;
+        }
+
+        /* Chatbox styles */
+        .chatbox {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            width: 40%;
+            height: 550px;
+        }
+
+        .chatbox__support {
+            display: flex;
+            flex-direction: column;
+            background: #eee;
+            width: 100%;
+            height: 100%;
+            z-index: -123456;
+            opacity: 0;
+            transition: all .5s ease-in-out;
+            border-radius: 20px;
+            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .chatbox--active {
+            transform: translateY(-40px);
+            z-index: 14523456;
+            opacity: 1;
+        }
+
+        .chatbox__button {
+            text-align: right;
+        }
+
+        .send__button {
+            padding: 6px;
+            background-color: black;
+            border: none;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .chatbox__header {
+            position: sticky;
+            top: 0;
+            background: var(--primaryGradient);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 20px;
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            box-shadow: var(--primaryBoxShadow);
+        }
+
+        .chatbox__image--header {
+            margin-right: 10px;
+        }
+
+        .chatbox__heading--header {
+            font-size: 1.2rem;
+            color: white;
+        }
+
+        .chatbox__description--header {
+            font-size: .9rem;
+            color: white;
+        }
+
+        .chatbox__messages {
+            padding: 0 20px;
+            margin-top: auto;
+            display: flex;
+            overflow-y: scroll;
+            flex-direction: column;
+            height: 80%;
+            background-color: #fafafa;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+        }
+
+        .messages__item {
+            margin-top: 10px;
+            background: #E0E0E0;
+            padding: 8px 12px;
+            max-width: 70%;
+        }
+
+        .messages__item--visitor,
+        .messages__item--typing {
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+        .messages__item--operator {
+            max-width: 80%;
+            background: var(--primary);
+            color: white;
+            margin-left: auto;
+            padding: 12px 16px;
+        }
+
+        .chatbox__footer {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 20px;
+            background: var(--secondaryGradient);
+            box-shadow: var(--secondaryBoxShadow);
+            border-bottom-right-radius: 10px;
+            border-bottom-left-radius: 10px;
+            margin-top: 20px;
+            height: 10%;
+        }
+        
+        .chatbox__close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .chatbox__footer input {
+            width: 80%;
+            border: none;
+            padding: 10px 10px;
+            border-radius: 30px;
+            text-align: left;
+        }
+
+        .chatbox__send--footer {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+        }
+
+        .chatbox__send--footer img {
+            width: 24px;
+            height: 24px;
+            vertical-align: middle;
+        }
+
+
+        .chatbox__button button,
+        .chatbox__button button:focus,
+        .chatbox__button button:visited {
+            padding: 10px;
+            background: white;
+            border: none;
+            outline: none;
+            border-top-left-radius: 50px;
+            border-top-right-radius: 50px;
+            border-bottom-left-radius: 50px;
+            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        /* Style for voice button */
+        #voice {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        #voice img {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+    <!-- Include Axios CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Include marked.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+
+<div class="chatbox">
+    <div class="chatbox__support chatbox--active">
+        <div class="chatbox__header">
+            <div class="chatbox__image--header">
+                <img src="https://img.icons8.com/color/48/000000/circled-user-female-skin-type-5--v1.png" alt="Support Avatar">
+            </div>
+            <div class="chatbox__content--header">
+                <h4 class="chatbox__heading--header">Chat Support</h4>
+                <p class="chatbox__description--header">Hi, I’m Sam. How can I assist you?</p>
+            </div>
+        </div>
+        <div id="messages" class="chatbox__messages"></div>
+        <div class="chatbox__footer">
+            <input type="text" id="input" placeholder="Write a message...">
+            <button type="button" class="chatbox__send--footer" id="voice">
+                <img src="https://img.icons8.com/ios-filled/24/ffffff/microphone.png" alt="Voice Input">
+            </button>
+            <button type="button" class="chatbox__send--footer" id="send">
+                <img src="https://img.icons8.com/ios-filled/24/ffffff/right.png" alt="Send">
+            </button>
+        </div>
+        
+    </div>
+    <div class="chatbox__button">
+        <button><img src="{{ url_for('static', filename='images/chatbox-icon.svg') }}" /></button>
+    </div>
+</div>
+
+<script>
+    // Speech recognition setup
+    const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+
+    // Voice button click handler
+    document.getElementById('voice').onclick = function() {
+        recognition.start();
+    };
+
+    // Handle speech recognition result
+    recognition.onresult = function(event) {
+        const transcript = event.results[0][0].transcript;
+        document.getElementById('input').value = transcript; // Set the input field with the recognized text
+        document.getElementById('send').click(); // Automatically send the message after voice input
+    };
+
+    // Handle send button click
+    document.getElementById('send').onclick = function() {
+        const input = document.getElementById('input').value;
+        if (input.trim() === '') return;
+
+        const messages = document.getElementById('messages');
+        
+        // Add user message
+        const userMessage = document.createElement('div');
+        userMessage.textContent = 'You: ' + input;
+        userMessage.classList.add('messages__item', 'messages__item--visitor');
+        messages.appendChild(userMessage);
+
+        // Scroll to the bottom of messages
+        messages.scrollTop = messages.scrollHeight;
+
+        // Use Axios to make a POST request
+        axios.post('/chat', {
+            question: input
+        })
+        .then(response => {
+            const botMessage = document.createElement('div');
+            // Convert Markdown to HTML using marked
+            botMessage.innerHTML = marked.parse(response.data.answer);
+            botMessage.classList.add('messages__item', 'messages__item--operator');
+            messages.appendChild(botMessage);
+
+            // Scroll to the bottom after bot reply
+            messages.scrollTop = messages.scrollHeight;
+        })
+        .catch(error => {
+            console.error('There was an error!', error);
+            const errorMessage = document.createElement('div');
+            errorMessage.textContent = 'Error: Unable to get a response.';
+            errorMessage.classList.add('messages__item');
+            messages.appendChild(errorMessage);
+        });
+
+        document.getElementById('input').value = '';
+    };
+
+    // Handle Enter key press to send message
+    document.getElementById('input').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Prevent the default form submission if applicable
+            document.getElementById('send').click(); // Trigger the send button click
+        }
+    });
+</script>
+
+
+</body>
+</html>
